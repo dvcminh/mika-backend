@@ -1,20 +1,10 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/animestyle
-    username: username
-    password: password
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    mongodb:
+      uri: mongodb+srv://21522348:5uJVhT1HGNK003jB@cluster0.czgkfdu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: mika
   application:
-    name: mika-backend
+    name: MIKA-BACKEND
 application:
   security:
     jwt:

@@ -23,8 +23,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
-
     private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+            "/api/v1/products/**",
+            "/api/v1/products/type",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -46,6 +47,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+
                                 .requestMatchers("/api/v1/staff/**").hasAnyRole(STAFF.name())
                                 .requestMatchers(GET, "/api/v1/staff/**").hasAnyAuthority(STAFF_READ.name())
                                 .requestMatchers(POST, "/api/v1/staff/**").hasAnyAuthority(STAFF_CREATE.name())
