@@ -1,13 +1,13 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://21522348:5uJVhT1HGNK003jB@cluster0.czgkfdu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: ${MONGO_URI}
       database: mika
   mail:
     host: smtp.gmail.com
     port: 587
-    username: 21522348@gm.uit.edu.vn
-    password: ncchoiprghnaxxnt
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
     properties:
       mail:
         smtp:

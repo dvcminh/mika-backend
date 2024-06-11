@@ -34,6 +34,7 @@ public class EmailController {
     )
     @GetMapping
     public ResponseEntity<String> sendEmail() {
-        return ResponseEntity.status(HttpStatus.OK).body(emailService.sendEmailToAllUsers("Test", "Test"));
+        emailService.sendEmailToAllUsers("Test", "Test");
+        return ResponseEntity.status(HttpStatus.OK).body("Email sent to all users!");
     }
 }

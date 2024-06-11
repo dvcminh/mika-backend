@@ -13,11 +13,11 @@ public class EmailService {
     private JavaMailSender mailSender;
     @Autowired
     private UserService userService;
-    public String sendEmailToAllUsers(String subject, String text) {
+    @Async
+    public void sendEmailToAllUsers(String subject, String text) {
         userService.getAllUsers().forEach(user -> {
             sendEmail(user.getEmail(), subject, text);
         });
-        return "Email sent to all users";
     }
 
     public void sendEmail(String to, String subject, String text) {
