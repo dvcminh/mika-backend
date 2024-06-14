@@ -1,10 +1,12 @@
 package com.mika.mikabackend.service;
 
+import com.mika.mikabackend.dto.page.PageData;
 import com.mika.mikabackend.model.Product;
 import com.mika.mikabackend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -54,5 +56,25 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findProductById(String id) {
         return productRepository.findById(id).orElse(null);
+    }
+
+
+
+
+
+
+
+
+
+    @Override
+    public PageData<Product> getProductsByTypeAndCategoryAndSubcategoryAndOfficial(String type, String category, String subcategory, Integer official, PageRequest of) {
+        Page<Product> products = productRepository.findByTypeAndCategoryAndSubcategoryAndOfficialAllIgnoreCase(type, category, subcategory, official, of);
+        return new PageData<>(products, "Get products by type, category, subcategory and official successfully");
+    }
+
+    @Override
+    public PageData<Product> getProductsByTitleAndTypeAndCategoryAndSubcategoryAndOfficial(String title, String type, String category, String subcategory, Integer official, PageRequest of) {
+        Page<Product> products = productRepository.findByTitleContainsAndTypeAndCategoryAndSubcategoryAndOfficialAllIgnoreCase(title, type, category, subcategory, official, of);
+        return new PageData<>(products, "Get products by title, type, category, subcategory and official successfully");
     }
 }
