@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +27,16 @@ public class ProductController {
         return productService.getProductsByTypeAndCategory(type, category, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
     }
 
+    @GetMapping("/getProductsByCategory")
+    public Page<Product> getProductsByCategory(
+                                                      @RequestParam(value = "category", required = false) String category,
+                                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                                      @RequestParam(value = "size", defaultValue = "10") int size,
+                                                      @RequestParam(defaultValue = "price") String sortBy,
+                                                      @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        return productService.getProductsByCategory(category, PageRequest.of(page, size, Sort.by(direction, sortBy)));
+    }
+
     @GetMapping("/getAll")
     public List<Product> getAllProducts() {
         return productService.findAll();
@@ -41,5 +48,13 @@ public class ProductController {
                                            @RequestParam(defaultValue = "price") String sortBy,
                                            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
         return productService.findProductByName(name, official, Sort.by(direction, sortBy));
+    }
+
+    @GetMapping("/findProductById")
+    public Product findProductById(@RequestParam String id,
+                                           @RequestParam(required = false) String official,
+                                           @RequestParam(defaultValue = "price") String sortBy,
+                                           @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        return productService.findProductById(id);
     }
 }

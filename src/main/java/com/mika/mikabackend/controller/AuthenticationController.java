@@ -2,11 +2,13 @@ package com.mika.mikabackend.controller;
 
 import com.mika.mikabackend.dto.AuthenticationRequest;
 import com.mika.mikabackend.dto.AuthenticationResponse;
+import com.mika.mikabackend.dto.OtpRequest;
 import com.mika.mikabackend.dto.RegisterRequest;
 import com.mika.mikabackend.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +31,27 @@ public class AuthenticationController {
     return ResponseEntity.ok(service.register(request));
   }
   @PostMapping("/authenticate")
-  public ResponseEntity<AuthenticationResponse> authenticate(
+  public String authenticate(
       @RequestBody AuthenticationRequest request
   ) {
-    return ResponseEntity.ok(service.authenticate(request));
+    return service.authenticate(request);
+  }
+
+  @PostMapping("/test")
+  public String test(
+          @RequestBody AuthenticationRequest request
+  ) {
+    return service.authenticate(request);
+  }
+
+  @PostMapping("/verifyOtp")
+  public AuthenticationResponse verifyOtp(@RequestBody OtpRequest otpRequest) throws BadRequestException {
+    boolean isValidOtp = service.verifyOtp(otpRequest.getEmail(), otpRequest.getOtp());
+    if(isValidOtp){
+      return service.returnToken(otpRequest.getEmail());
+    } else {
+      throw new BadRequestException("Invalid OTP");
+    }
   }
 
   @PostMapping("/refresh-token")
