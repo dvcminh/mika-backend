@@ -1,6 +1,7 @@
 package com.mika.mikabackend.service;
 
 import com.mika.mikabackend.dto.ChangePasswordRequest;
+import com.mika.mikabackend.dto.UpdateProfileRequest;
 import com.mika.mikabackend.model.User;
 import com.mika.mikabackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +43,25 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<User> getAllUsers() {
         return repository.findAll();
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        repository.deleteById(id);
+    }
+
+    public User updateUser(String id, UpdateProfileRequest profile) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+        user.setFirstname(profile.getFirstName());
+        user.setLastname(profile.getLastName());
+        user.setPhone(profile.getPhone());
+        user.setAddress(profile.getAddress());
+//        user.setAvatar(profile.getAvatar());
+
+        return repository.save(user);
+//        redisTemplate.opsForHash().put(HASH_KEY, id, user);
+//        redisTemplate.expire(HASH_KEY, CACHE_TTL, TimeUnit.SECONDS);
+//        return userMapper.toUserDto(savedUser, "Update user profile successfully");
     }
 }

@@ -1,21 +1,26 @@
 package com.mika.mikabackend.controller;
 
 import com.mika.mikabackend.dto.ChangePasswordRequest;
+import com.mika.mikabackend.dto.UpdateProfileRequest;
 import com.mika.mikabackend.model.User;
+import com.mika.mikabackend.service.UserService;
 import com.mika.mikabackend.service.UserServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl service;
+    private final UserService service;
 
     @PatchMapping
     public ResponseEntity<?> changePassword(
@@ -29,5 +34,25 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getAllUser() {
         return ResponseEntity.ok(service.getAllUsers());
+    }
+
+    @PatchMapping("/updateUser/{id}")
+    @Operation(summary = "Update user (updateUser)")
+    public ResponseEntity<User> updateUser(
+            @PathVariable("id") String id,
+            @Valid @RequestBody UpdateProfileRequest profile
+    ) {
+        return ResponseEntity.ok(
+                service.updateUser(id, profile)
+        );
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    @Operation(summary = "Delete user (deleteUser)")
+    public ResponseEntity<?> deleteUser(
+            @PathVariable("id") String id
+    ) {
+        service.deleteUser(id);
+        return ResponseEntity.ok().build();
     }
 }
