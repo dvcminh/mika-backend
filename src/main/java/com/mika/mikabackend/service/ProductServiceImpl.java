@@ -3,6 +3,7 @@ package com.mika.mikabackend.service;
 import com.mika.mikabackend.model.Product;
 import com.mika.mikabackend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,6 +22,11 @@ public class ProductServiceImpl implements ProductService {
 
     public Page<Product> getProductsByTypeAndCategory(String type, String category, String official, Pageable pageable) {
         return productRepository.findDistinctByTypeAndCategoryAndOfficialAllIgnoreCase(type, category, official, pageable);
+    }
+
+    @Override
+    public Page<Product> getProductsByCategory(String category, Pageable pageable) {
+        return productRepository.findDistinctByCategoryAllIgnoreCase(category, pageable);
     }
 
     public Product getProduct(String id) {
@@ -43,5 +49,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findProductByName(String name, String official, Sort sort) {
         return productRepository.findByTitleContainsIgnoreCaseAndOfficial(name, official, sort);
+    }
+
+    @Override
+    public Product findProductById(String id) {
+        return productRepository.findById(id).orElse(null);
     }
 }

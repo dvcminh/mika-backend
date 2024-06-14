@@ -11,8 +11,20 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
+
     @Autowired
     private UserService userService;
+
+    public void sendOTPEmail(String toEmail, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("nhatkhangnguyen1111@gmail.com");
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+
+
     @Async
     public void sendEmailToAllUsers(String subject, String text) {
         userService.getAllUsers().forEach(user -> {
