@@ -1,8 +1,19 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://21522348:5uJVhT1HGNK003jB@cluster0.czgkfdu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: ${MONGO_URI}
       database: mika
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   application:
     name: MIKA-BACKEND
 application:
@@ -12,5 +23,6 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
+
 server:
   port: 8080
