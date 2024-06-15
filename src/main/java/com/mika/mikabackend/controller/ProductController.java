@@ -70,11 +70,13 @@ public class ProductController {
                                                                                    @RequestParam(value = "size", defaultValue = "10") int size,
                                                                                    @RequestParam(defaultValue = "price") String sortBy,
                                                                                    @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
-        if (title.isEmpty()) {
-            return productService.getProductsByTypeAndCategoryAndSubcategoryAndOfficial(type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
 
-        }
-        return productService.getProductsByTitleAndTypeAndCategoryAndSubcategoryAndOfficial(title, type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
+        return productService.getProductsByFilter(title, type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
+//        if (title.isEmpty()) {
+//            return productService.getProductsByTypeAndCategoryAndSubcategoryAndOfficial(type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
+//
+//        }
+//        return productService.getProductsByTitleAndTypeAndCategoryAndSubcategoryAndOfficial(title, type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
 
     }
 }

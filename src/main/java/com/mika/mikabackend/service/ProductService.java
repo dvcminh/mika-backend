@@ -21,4 +21,6 @@ public interface ProductService {
 
     PageData<Product> getProductsByTypeAndCategoryAndSubcategoryAndOfficial(String type, String category, String subcategory, Integer official, PageRequest of);
     PageData<Product> getProductsByTitleAndTypeAndCategoryAndSubcategoryAndOfficial(String title, String type, String category, String subcategory, Integer official, PageRequest of);
+
+    PageData<Product> getProductsByFilter(String title, String type, String category, String subcategory, Integer official, PageRequest of);
 }

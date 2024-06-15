@@ -5,10 +5,11 @@ import com.mika.mikabackend.model.Product;
 import com.mika.mikabackend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
 
 
-
+    private final MongoTemplate mongoTemplate;
 
 
     @Override
@@ -76,5 +77,34 @@ public class ProductServiceImpl implements ProductService {
     public PageData<Product> getProductsByTitleAndTypeAndCategoryAndSubcategoryAndOfficial(String title, String type, String category, String subcategory, Integer official, PageRequest of) {
         Page<Product> products = productRepository.findByTitleContainsAndTypeAndCategoryAndSubcategoryAndOfficialAllIgnoreCase(title, type, category, subcategory, official, of);
         return new PageData<>(products, "Get products by title, type, category, subcategory and official successfully");
+    }
+
+    @Override
+    public PageData<Product> getProductsByFilter(String title, String type, String category, String subcategory, Integer official, PageRequest pageRequest) {
+        Query query = new Query();
+
+        if (title != null && !title.isEmpty()) {
+            query.addCriteria(Criteria.where("title").regex(title, "i"));
+        }
+        if (type != null && !type.isEmpty()) {
+            query.addCriteria(Criteria.where("type").is(type));
+        }
+        if (category != null && !category.isEmpty()) {
+            query.addCriteria(Criteria.where("category").is(category));
+        }
+        if (subcategory != null && !subcategory.isEmpty()) {
+            query.addCriteria(Criteria.where("subcategory").is(subcategory));
+        }
+        if (official != null) {
+            query.addCriteria(Criteria.where("official").is(official));
+        }
+
+        long total = mongoTemplate.count(query, Product.class);
+        query.with(pageRequest);
+        List<Product> products = mongoTemplate.find(query, Product.class);
+
+        Page<Product> productPage = new PageImpl<>(products, pageRequest, total);
+
+        return new PageData<>(productPage, "Get products by filter successfully");
     }
 }
