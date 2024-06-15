@@ -1,5 +1,6 @@
 package com.mika.mikabackend.controller;
 
+import com.mika.mikabackend.dto.UpdateProductRequest;
 import com.mika.mikabackend.dto.page.PageData;
 import com.mika.mikabackend.model.Product;
 import com.mika.mikabackend.service.ProductService;
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -79,4 +82,23 @@ public class ProductController {
 //        return productService.getProductsByTitleAndTypeAndCategoryAndSubcategoryAndOfficial(title, type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
 
     }
+
+    @GetMapping("/getSimilarProductsByCategoryAndType")
+    public List<Product> getSimilarProductsByCategoryAndType(@RequestParam(value = "type", required = false) String type,
+                                                             @RequestParam(value = "subcategory", required = false) String subcategory) {
+        return productService.getProductByCategoryAndType(type, subcategory);
+    }
+
+    @PutMapping("/updateProduct/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody UpdateProductRequest updateProductRequest) {
+        Product updatedProduct = productService.updateProduct(id, updateProductRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+    }
+
+    @DeleteMapping("/deleteProduct/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable String id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("Delete product successfully");
+    }
+
 }

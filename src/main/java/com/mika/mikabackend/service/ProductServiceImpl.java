@@ -1,5 +1,6 @@
 package com.mika.mikabackend.service;
 
+import com.mika.mikabackend.dto.UpdateProductRequest;
 import com.mika.mikabackend.dto.page.PageData;
 import com.mika.mikabackend.model.Product;
 import com.mika.mikabackend.repository.ProductRepository;
@@ -106,5 +107,35 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> productPage = new PageImpl<>(products, pageRequest, total);
 
         return new PageData<>(productPage, "Get products by filter successfully");
+    }
+
+    @Override
+    public List<Product> getProductByCategoryAndType(String type, String subcategory) {
+        return productRepository.findByTypeAndSubcategoryAllIgnoreCase(type, subcategory).stream().limit(3).toList();
+    }
+
+    @Override
+    public Product updateProduct(String id, UpdateProductRequest updateProductRequest) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return null;
+        }
+        product.setTitle(updateProductRequest.getTitle());
+        product.setDescription(updateProductRequest.getDescription());
+        product.setPrice(updateProductRequest.getPrice());
+        product.setLink_item(updateProductRequest.getLink_item());
+        product.setImage_url(updateProductRequest.getImage_url());
+        product.setDiscount_percent_list(updateProductRequest.getDiscount_percent_list());
+        product.setCountReviews(updateProductRequest.getCountReviews());
+        product.setType(updateProductRequest.getType());
+        product.setCategory(updateProductRequest.getCategory());
+        product.setSubcategory(updateProductRequest.getSubcategory());
+        product.setOfficial(updateProductRequest.getOfficial());
+        return productRepository.save(product);
+    }
+
+    @Override
+    public void deleteProduct(String id) {
+        productRepository.deleteById(id);
     }
 }
