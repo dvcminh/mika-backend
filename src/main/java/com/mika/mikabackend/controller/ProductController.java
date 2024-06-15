@@ -1,5 +1,6 @@
 package com.mika.mikabackend.controller;
 
+import com.mika.mikabackend.dto.page.PageData;
 import com.mika.mikabackend.model.Product;
 import com.mika.mikabackend.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,11 @@ public class ProductController {
 
     @GetMapping("/getProductsByCategory")
     public Page<Product> getProductsByCategory(
-                                                      @RequestParam(value = "category", required = false) String category,
-                                                      @RequestParam(value = "page", defaultValue = "0") int page,
-                                                      @RequestParam(value = "size", defaultValue = "10") int size,
-                                                      @RequestParam(defaultValue = "price") String sortBy,
-                                                      @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(defaultValue = "price") String sortBy,
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
         return productService.getProductsByCategory(category, PageRequest.of(page, size, Sort.by(direction, sortBy)));
     }
 
@@ -52,9 +53,28 @@ public class ProductController {
 
     @GetMapping("/findProductById")
     public Product findProductById(@RequestParam String id,
-                                           @RequestParam(required = false) String official,
-                                           @RequestParam(defaultValue = "price") String sortBy,
-                                           @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+                                   @RequestParam(required = false) String official,
+                                   @RequestParam(defaultValue = "price") String sortBy,
+                                   @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
         return productService.findProductById(id);
+    }
+
+
+    @GetMapping("/getProductsByTypeAndCategoryAndSubcategoryAndOfficial")
+    public PageData<Product> getProductsByTypeAndCategoryAndSubcategoryAndOfficial(@RequestParam(value = "title", required = false) String title,
+                                                                                   @RequestParam(value = "type", required = false) String type,
+                                                                                   @RequestParam(value = "category", required = false) String category,
+                                                                                   @RequestParam(value = "subcategory", required = false) String subcategory,
+                                                                                   @RequestParam(value = "official", required = false) Integer official,
+                                                                                   @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                                   @RequestParam(value = "size", defaultValue = "10") int size,
+                                                                                   @RequestParam(defaultValue = "price") String sortBy,
+                                                                                   @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        if (title.isEmpty()) {
+            return productService.getProductsByTypeAndCategoryAndSubcategoryAndOfficial(type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
+
+        }
+        return productService.getProductsByTitleAndTypeAndCategoryAndSubcategoryAndOfficial(title, type, category, subcategory, official, PageRequest.of(page, size, Sort.by(direction, sortBy)));
+
     }
 }

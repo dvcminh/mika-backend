@@ -25,5 +25,5 @@ public class Product {
     private String type;
     private String category;
     private String subcategory;
-    private String official;
+    private Integer official;
 }

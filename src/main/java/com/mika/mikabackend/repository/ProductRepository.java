@@ -18,4 +18,13 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Page<Product> findDistinctByCategoryAllIgnoreCase(String category, Pageable pageable);
 
     List<Product> findByTitleContainsIgnoreCaseAndOfficial(String title, @Nullable String official, Sort sort);
+
+
+
+
+
+
+    Page<Product> findByTypeAndCategoryAndSubcategoryAndOfficialAllIgnoreCase(String type, String category, String subcategory, Integer official, Pageable pageable);
+
+    Page<Product> findByTitleContainsAndTypeAndCategoryAndSubcategoryAndOfficialAllIgnoreCase(String title, String type, String category, String subcategory, Integer official, Pageable pageable);
 }
