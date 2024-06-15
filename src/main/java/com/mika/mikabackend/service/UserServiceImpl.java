@@ -64,4 +64,10 @@ public class UserServiceImpl implements UserService{
 //        redisTemplate.expire(HASH_KEY, CACHE_TTL, TimeUnit.SECONDS);
 //        return userMapper.toUserDto(savedUser, "Update user profile successfully");
     }
+
+    @Override
+    public User getCurrenUser(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+    }
 }

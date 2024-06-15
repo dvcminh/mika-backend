@@ -18,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     private final UserService service;
@@ -36,8 +37,14 @@ public class UserController {
         return ResponseEntity.ok(service.getAllUsers());
     }
 
+    @GetMapping("/me")
+    public User getCurrenUser(@RequestParam String email) {
+        return service.getCurrenUser(email);
+    }
+
     @PatchMapping("/updateUser/{id}")
     @Operation(summary = "Update user (updateUser)")
+    @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<User> updateUser(
             @PathVariable("id") String id,
             @Valid @RequestBody UpdateProfileRequest profile

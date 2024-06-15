@@ -14,4 +14,6 @@ public interface UserService {
     void deleteUser(String id);
 
     User updateUser(String id, UpdateProfileRequest profile);
+
+    User getCurrenUser(String email);
 }
